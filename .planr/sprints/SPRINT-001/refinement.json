@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "sprintId": "SPRINT-001",
+  "refinedAt": "2026-10-17",
+  "inputs": {
+    "capacityDays": 10,
+    "gitRevision": "a4927ae",
+    "sources": ["backlog", "spec-tasks", "git", "tests"],
+    "defaulted": ["capacity: 1 engineer x 10 days", "horizon: two weeks from 2026-10-17", "focus: everything", "dead items: propose close", "mode: refine only"],
+    "notes": "Refine only; no sprint artifact exists, so SPRINT-001 is reserved for this note. Judged against main a4927ae; BL-004..BL-006 and SPEC-001 exist only on slot6/page-size-cap (6333377), which is 2 commits ahead of main. No release profile, previous sprint, Operate cycle or tracker connector. openplanr CLI needed approval in this session, so files were written by hand. npm test on 6333377: 23/23 passed."
+  },
+  "items": [
+    {
+      "id": "BL-004",
+      "title": "totalPages undercounts when items do not divide evenly by pageSize",
+      "claim": "paginate() floors totalPages, so hasNext is false while orders remain",
+      "evidenceDate": "2026-10-17",
+      "codePath": "src/pagination.ts:18",
+      "codePathExists": true,
+      "stale": false,
+      "blockedBy": [],
+      "effort": "hours",
+      "score": 9,
+      "bucket": "inProgress",
+      "reason": "reproduced on 6333377: paginate([1,2,3],1,2) gives totalPages 1, hasNext false; clients following hasNext lose the last partial page; sequenced after T-001 because both edit the totalPages line (main:18, branch:23)"
+    },
+    {
+      "id": "T-001",
+      "title": "Validate and clamp pageSize in paginate()",
+      "claim": "paginate() rejects pageSize below 1 and clamps above 100",
+      "evidenceDate": "2026-10-17",
+      "codePath": "src/pagination.ts",
+      "codePathExists": true,
+      "stale": false,
+      "blockedBy": [],
+      "effort": "hours",
+      "score": 8,
+      "bucket": "inProgress",
+      "reason": "implemented in 6333377 with tests passing but not merged to main; status still pending; remaining work is review and merge"
+    },
+    {
+      "id": "BL-003",
+      "title": "Reject zero or negative quantities when creating an order",
+      "claim": "OrderStore.create accepts quantity 0 or negative, producing zero or negative totals",
+      "evidenceDate": "2026-10-17",
+      "codePath": "src/orders.ts:42-48",
+      "codePathExists": true,
+      "stale": false,
+      "blockedBy": [],
+      "effort": "hours",
+      "score": 6,
+      "bucket": "inProgress",
+      "reason": "create() checks customer and line count only; negative totals flow into the CSV export"
+    },
+    {
+      "id": "BL-006",
+      "title": "README install command is misspelled as npm intsall",
+      "claim": "README Run it block says npm intsall",
+      "evidenceDate": "2026-10-17",
+      "codePath": "README.md:12",
+      "codePathExists": true,
+      "stale": false,
+      "blockedBy": [],
+      "effort": "hours",
+      "score": 5,
+      "bucket": "inProgress",
+      "reason": "typo present on main and on the branch; first command a new reader copies"
+    },
+    {
+      "id": "BL-005",
+      "title": "loadConfig accepts any defaultPageSize without validation",
+      "claim": "loadConfig spreads config.local.json over defaults with no checks on defaultPageSize",
+      "evidenceDate": "2026-10-17",
+      "codePath": "src/config.ts:21-22",
+      "codePathExists": true,
+      "stale": false,
+      "blockedBy": [],
+      "effort": "hours",
+      "score": 3,
+      "bucket": "inProgress",
+      "reason": "real but operator-only; cheap, fits spare capacity, and must follow T-001 because its 1-100 bound reuses MAX_PAGE_SIZE"
+    },
+    {
+      "id": "BL-002",
+      "title": "Stream the CSV export instead of building it in memory",
+      "claim": "ordersToCsv builds the whole export as one string before sending",
+      "evidenceDate": "2026-10-17",
+      "codePath": "src/export.ts:14-25",
+      "codePathExists": true,
+      "stale": false,
+      "blockedBy": [],
+      "effort": "day",
+      "score": 1,
+      "bucket": "planNext",
+      "reason": "OrderStore already holds every order in memory (src/orders.ts:56), so streaming only removes one copy; worth doing once orders are persisted"
+    },
+    {
+      "id": "BL-001",
+      "title": "CSV export breaks when a customer name contains a comma",
+      "claim": "ordersToCsv joins raw fields, so a comma in a customer name shifts columns",
+      "evidenceDate": "2026-10-17",
+      "codePath": "src/export.ts:5-7",
+      "codePathExists": true,
+      "stale": true,
+      "blockedBy": [],
+      "effort": "hours",
+      "score": 0,
+      "bucket": "closeOrDemote",
+      "reason": "already delivered: csvField quotes commas, quotes, CR and LF; test covers comma and quote",
+      "evidence": "commit 1b58281 (2026-10-17 16:48, before the item was filed at 16:53); src/export.ts:5-7; test/export.test.ts:24-27",
+      "targetStatus": "closed"
+    }
+  ],
+  "buckets": {
+    "inProgress": ["T-001", "BL-004", "BL-005", "BL-003", "BL-006"],
+    "planNext": ["BL-002"],
+    "blocked": [],
+    "closeOrDemote": ["BL-001"]
+  },
+  "batches": [
+    { "title": "PR 1 · pagination: review and merge slot6/page-size-cap", "effortDays": 0.25, "itemIds": ["T-001"] },
+    { "title": "PR 2 · pagination and config: ceil totalPages, validate defaultPageSize", "effortDays": 0.5, "itemIds": ["BL-004", "BL-005"] },
+    { "title": "PR 3 · orders: reject quantity below 1", "effortDays": 0.25, "itemIds": ["BL-003"] },
+    { "title": "PR 4 · docs: fix README install command", "effortDays": 0.1, "itemIds": ["BL-006"] }
+  ],
+  "refuted": [
+    {
+      "itemId": "BL-001",
+      "lens": "evidence",
+      "change": "high-priority bug already fixed by 1b58281 with a test; moved to close",
+      "from": "inProgress",
+      "to": "closeOrDemote"
+    },
+    {
+      "itemId": "BL-002",
+      "lens": "impact",
+      "change": "nobody is hit this month: data is demo-scale and the store keeps all orders in memory anyway; moved to plan next",
+      "from": "inProgress",
+      "to": "planNext"
+    }
+  ]
+}
