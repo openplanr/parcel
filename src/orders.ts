@@ -33,8 +33,11 @@ export function orderTotalCents(order: Pick<Order, "lines">): number {
 export class OrderStore {
   private readonly orders: Order[] = [];
   private nextId = 1;
+  private readonly now: () => Date;
 
-  constructor(private readonly now: () => Date = () => new Date()) {}
+  constructor(now: () => Date = () => new Date()) {
+    this.now = now;
+  }
 
   create(input: NewOrder): Order {
     if (input.customer.trim() === "") {
