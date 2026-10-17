@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "sprintId": "SPRINT-001",
+  "refinedAt": "2026-10-17",
+  "inputs": {
+    "capacityDays": 10,
+    "gitRevision": "a4927ae",
+    "sources": ["backlog", "git", "code", "tests"],
+    "defaulted": ["capacity", "horizon", "focus", "dead-item handling"],
+    "notes": "Refine-only run: no selection, so no item is placed in inProgress. No release profile, no previous refinement, no Operate cycle, no quick tasks or spec tasks. openplanr CLI calls were not approved in this session, so files were written by hand and not validated by the CLI. No tracker connected; statuses stay local."
+  },
+  "items": [
+    {
+      "id": "BL-001",
+      "title": "CSV export breaks when a customer name contains a comma",
+      "claim": "ordersToCsv joins raw fields with commas, so a customer name with a comma shifts columns in /orders/export.csv",
+      "evidenceDate": "2026-10-17",
+      "codePath": "src/export.ts",
+      "codePathExists": true,
+      "stale": true,
+      "blockedBy": [],
+      "effort": "hours",
+      "score": 0,
+      "bucket": "closeOrDemote",
+      "reason": "premise false on main: fields are already quoted per RFC 4180 and both acceptance criteria are met",
+      "evidence": "commit 1b58281 on main; src/export.ts:5-7 quotes fields matching [\",\\r\\n]; test/export.test.ts:24-27 covers a name with a comma and a quote; vitest 12/12 passing on 2026-10-17",
+      "targetStatus": "closed"
+    },
+    {
+      "id": "BL-002",
+      "title": "Stream the CSV export instead of building it in memory",
+      "claim": "ordersToCsv builds the whole CSV as one string before /orders/export.csv sends it, so memory grows with order count",
+      "evidenceDate": "2026-10-17",
+      "codePath": "src/export.ts, src/server.ts",
+      "codePathExists": true,
+      "stale": false,
+      "blockedBy": [],
+      "effort": "day",
+      "score": 2,
+      "bucket": "planNext",
+      "reason": "real (src/export.ts:14-24, src/server.ts:37-43) but low impact: OrderStore already holds every order in memory, so the CSV string at most doubles a footprint that is small at demo scale"
+    },
+    {
+      "id": "BL-003",
+      "title": "Reject zero or negative quantities when creating an order",
+      "claim": "OrderStore.create accepts a line with quantity 0 or negative, producing a zero or negative order total",
+      "evidenceDate": "2026-10-17",
+      "codePath": "src/orders.ts",
+      "codePathExists": true,
+      "stale": false,
+      "blockedBy": [],
+      "effort": "hours",
+      "score": 6,
+      "bucket": "planNext",
+      "reason": "real: src/orders.ts:42-58 validates only customer and line count; highest-scoring open item and the first pick when a sprint is selected; consider non-integer quantities in the same check"
+    }
+  ],
+  "buckets": {
+    "inProgress": [],
+    "planNext": ["BL-003", "BL-002"],
+    "blocked": [],
+    "closeOrDemote": ["BL-001"]
+  },
+  "batches": [],
+  "refuted": []
+}
