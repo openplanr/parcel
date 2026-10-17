@@ -1,0 +1,10 @@
+{
+  "kind": "planning-id-sequence",
+  "schemaVersion": "1.0.0",
+  "protocolVersion": "1.7.0",
+  "next": {
+    "SPEC": 2,
+    "US": 2,
+    "T": 2
+  }
+}
