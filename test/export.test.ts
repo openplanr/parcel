@@ -20,4 +20,9 @@ describe("ordersToCsv", () => {
         "ord_0001,Lena Park,paid,3,49.00,2026-10-01T09:00:00.000Z\n",
     );
   });
+
+  it("quotes customer names that contain commas or quotes", () => {
+    const csv = ordersToCsv([{ ...order, customer: 'Haddad, Omar "OJ"' }]);
+    expect(csv.split("\n")[1]).toBe('ord_0001,"Haddad, Omar ""OJ""",paid,3,49.00,2026-10-01T09:00:00.000Z');
+  });
 });

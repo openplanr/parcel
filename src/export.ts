@@ -2,6 +2,10 @@ import { type Order, orderTotalCents } from "./orders.ts";
 
 const HEADER = ["id", "customer", "status", "items", "total", "created_at"];
 
+function csvField(value: string): string {
+  return /[",\r\n]/.test(value) ? `"${value.replaceAll('"', '""')}"` : value;
+}
+
 function formatCents(cents: number): string {
   return (cents / 100).toFixed(2);
 }
@@ -16,5 +20,5 @@ export function ordersToCsv(orders: readonly Order[]): string {
     formatCents(orderTotalCents(order)),
     order.createdAt,
   ]);
-  return [HEADER, ...rows].map((row) => row.join(",")).join("\n") + "\n";
+  return [HEADER, ...rows].map((row) => row.map(csvField).join(",")).join("\n") + "\n";
 }
