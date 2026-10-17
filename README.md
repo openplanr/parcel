@@ -20,7 +20,7 @@ The server listens on port 3000 and starts with three demo orders.
 
 | Method | Path | What it returns |
 |---|---|---|
-| GET | `/orders?page=1&pageSize=20&status=paid` | One page of orders, newest first. `status` is optional. |
+| GET | `/orders?page=1&pageSize=20&status=paid` | One page of orders, newest first. `pageSize` must be an integer from 1 to 100; larger values are clamped to 100. `status` is optional. |
 | GET | `/orders/export.csv` | Every order as CSV, one row per order |
 
 ## Layout

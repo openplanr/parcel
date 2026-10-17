@@ -31,6 +31,40 @@ describe("GET /orders", () => {
     const res = await fetch(`${baseUrl}/orders?page=0`);
     expect(res.status).toBe(400);
   });
+
+  it("clamps pageSize above 100", async () => {
+    const res = await fetch(`${baseUrl}/orders?pageSize=101`);
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.pageSize).toBe(100);
+    expect(body.items.length).toBeLessThanOrEqual(100);
+  });
+
+  it("accepts pageSize=100", async () => {
+    const res = await fetch(`${baseUrl}/orders?pageSize=100`);
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.pageSize).toBe(100);
+  });
+
+  it("accepts pageSize=1", async () => {
+    const res = await fetch(`${baseUrl}/orders?pageSize=1`);
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.pageSize).toBe(1);
+    expect(body.items).toHaveLength(1);
+  });
+
+  it("rejects pageSize=0 with 400", async () => {
+    const res = await fetch(`${baseUrl}/orders?pageSize=0`);
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: "pageSize must be a positive integer, got 0" });
+  });
+
+  it.each(["-5", "abc", "2.5"])("rejects pageSize=%s with 400", async (pageSize) => {
+    const res = await fetch(`${baseUrl}/orders?pageSize=${pageSize}`);
+    expect(res.status).toBe(400);
+  });
 });
 
 describe("GET /orders/export.csv", () => {
