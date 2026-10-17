@@ -9,7 +9,7 @@ It's the sample project used in OpenPlanr's videos and posts: small enough to re
 Needs Node 22.6 or later (the server runs the TypeScript sources directly).
 
 ```sh
-npm intsall
+npm install
 npm test
 npm start
 ```
