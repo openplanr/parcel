@@ -54,6 +54,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   store.create({ customer: "Haddad, Omar", lines: [{ sku: "TEE-M", quantity: 1, unitPriceCents: 2500 }] });
   store.create({ customer: "Sofia Rossi", lines: [{ sku: "CAP-BLK", quantity: 3, unitPriceCents: 1800 }] });
   createServer(createApp(store, config.defaultPageSize)).listen(config.port, () => {
-    console.log(`order-service listening on http://localhost:${config.port}`);
+    console.log(`parcel listening on http://localhost:${config.port}`);
   });
 }
