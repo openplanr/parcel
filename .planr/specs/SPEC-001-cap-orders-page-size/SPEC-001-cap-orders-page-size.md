@@ -38,7 +38,7 @@ Goal: bound every page to at most 100 orders and reject a `pageSize` below 1 wit
 
 **Target:** All acceptance criteria below pass under `npm test`; `npm run typecheck` is clean.
 
-**Timeframe:** Next release of order-service (currently 0.3.0).
+**Timeframe:** Next release of parcel (currently 0.3.0).
 
 ## Functional Requirements
 

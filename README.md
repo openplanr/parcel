@@ -1,4 +1,4 @@
-# order-service
+# parcel
 
 A small orders API. It keeps orders in memory, lists them a page at a time, and exports them as CSV.
 
