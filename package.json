@@ -1,0 +1,22 @@
+{
+  "name": "order-service",
+  "version": "0.3.0",
+  "private": true,
+  "description": "A small orders API: list, paginate and export orders as CSV.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node --experimental-strip-types src/server.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "engines": {
+    "node": ">=22.6"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}
